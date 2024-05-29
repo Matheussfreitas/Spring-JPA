@@ -5,10 +5,7 @@ import com.spring.project.ProjetoSpring.service.ConverteDados;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Menu {
@@ -61,12 +58,17 @@ public class Menu {
         System.out.println("Top 5 episódios: ");
         dadosEpisodios.stream()
                 .filter(e -> !e.avaliacao().equalsIgnoreCase("N/A"))
+                //.peek(e -> System.out.println("Primeiro filtro N/A " + e))  mostra um passo a passo (debug) de um stream
                 .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
+                //.peek(e -> System.out.println("Ordenação " + e))
                 .limit(5)
+                //.peek(e -> System.out.println("Limite " + e))
                 .forEach(System.out::println);
 
         System.out.println("-------------------");
 
+        //lista de todos os episodios junto com os detalhes de cada um
+        System.out.println("Lista de episódios detalhada: ");
         List<Episodio> episodios = temporadas.stream()
                 .flatMap(t -> t.episodios().stream()
                         .map(d -> new Episodio(t.numeroTemporada(), d)))
@@ -75,6 +77,34 @@ public class Menu {
 
         System.out.println("-------------------");
 
+        //busca por um trecho de episodio no meio de todos os episodios
+        System.out.println("Digite o trecho do nome de um episódio que queira encontrar: ");
+        var trechoTitulo = scanner.nextLine();
+        Optional<Episodio> episodioBuscado = episodios.stream()
+                        .filter(e -> e.getTitulo().toLowerCase().contains(trechoTitulo.toLowerCase()))
+                        .findFirst();
+        if (episodioBuscado.isPresent()){
+            System.out.println("Episódio encontrado!");
+            System.out.println("Episódio: " + episodioBuscado.get().getTitulo() + (" | Temporada: ") + episodioBuscado.get().getTemporada());
+        } else {
+            System.out.println("Episódio não encontrado!");
+        }
+
+        System.out.println("-------------------");
+
+        //traz estatisticas de avaliação das temporadas
+        DoubleSummaryStatistics estatisticas = episodios.stream()
+                        .filter(e -> e.getAvaliacao() > 0.0)
+                        .collect(Collectors.summarizingDouble(Episodio::getAvaliacao));
+        System.out.println("Estatísticas de " + nomeSerie);
+        System.out.println("Média: " + estatisticas.getAverage());
+        System.out.println("Melhor episódio: " + estatisticas.getMax());
+        System.out.println("Pior episódio: " + estatisticas.getMin());
+        System.out.println("Total de episódios avaliados: " + estatisticas.getCount());
+
+        System.out.println("-------------------");
+
+        //busca todos os episodios lançados a partir do ano informado
         System.out.println("A partir de que ano você deseja ver os episódios? ");
         var ano = scanner.nextInt();
 
