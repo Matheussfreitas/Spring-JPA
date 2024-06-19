@@ -36,16 +36,9 @@ public class Menu {
 
         System.out.println("-------------------");
 
-//        for (int i = 0; i < dados.totalTemporadas(); i++) {
-//            List<DadosEpisodio> episodiosTemporada = temporadas.get(i).episodios();
-//            for (int j = 0; j < episodiosTemporada.size(); j++) {
-//                System.out.println(episodiosTemporada.get(j).titulo());
-//            }
-//        }
-
         //printa o nome de todos os titulos dos episodios
         System.out.println("Lista de todos os episódios da série: ");
-        temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo()))); //faz a mesma coisa do código acima de forma resumida
+        temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));
 
         //coleta todos os episodios da serie e joga em uma lista
         List<DadosEpisodio> dadosEpisodios = temporadas.stream()
@@ -81,9 +74,9 @@ public class Menu {
         System.out.println("Digite o trecho do nome de um episódio que queira encontrar: ");
         var trechoTitulo = scanner.nextLine();
         Optional<Episodio> episodioBuscado = episodios.stream()
-                        .filter(e -> e.getTitulo().toLowerCase().contains(trechoTitulo.toLowerCase()))
-                        .findFirst();
-        if (episodioBuscado.isPresent()){
+                .filter(e -> e.getTitulo().toLowerCase().contains(trechoTitulo.toLowerCase()))
+                .findFirst();
+        if (episodioBuscado.isPresent()) {
             System.out.println("Episódio encontrado!");
             System.out.println("Episódio: " + episodioBuscado.get().getTitulo() + (" | Temporada: ") + episodioBuscado.get().getTemporada());
         } else {
@@ -94,8 +87,8 @@ public class Menu {
 
         //traz estatisticas de avaliação das temporadas
         DoubleSummaryStatistics estatisticas = episodios.stream()
-                        .filter(e -> e.getAvaliacao() > 0.0)
-                        .collect(Collectors.summarizingDouble(Episodio::getAvaliacao));
+                .filter(e -> e.getAvaliacao() > 0.0)
+                .collect(Collectors.summarizingDouble(Episodio::getAvaliacao));
         System.out.println("Estatísticas de " + nomeSerie);
         System.out.println("Média: " + estatisticas.getAverage());
         System.out.println("Melhor episódio: " + estatisticas.getMax());
@@ -121,3 +114,4 @@ public class Menu {
                 ));
     }
 }
+
