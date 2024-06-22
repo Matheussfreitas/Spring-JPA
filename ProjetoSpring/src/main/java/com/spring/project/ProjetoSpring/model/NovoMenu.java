@@ -3,7 +3,6 @@ package com.spring.project.ProjetoSpring.model;
 import com.spring.project.ProjetoSpring.repository.SerieRepository;
 import com.spring.project.ProjetoSpring.service.ConsumirAPI;
 import com.spring.project.ProjetoSpring.service.ConverteDados;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -18,7 +17,6 @@ public class NovoMenu {
     private List<DadosSerie> dadosSeries = new ArrayList<>();
     private final String ENDERECO = "https://www.omdbapi.com/?t="; //declara constantes
     private final String API_KEY = "&apikey=5ce2bbab"; //declara constantes
-
     private SerieRepository repositorio;
 
     public NovoMenu(SerieRepository repositorio) {
@@ -87,10 +85,10 @@ public class NovoMenu {
     }
 
     private void listarSeriesBuscadas() {
-        List<Serie> series = new ArrayList<>();
-        series = dadosSeries.stream()
-                .map(d -> new Serie(d))
-                .collect(Collectors.toList());
+        List<Serie> series = repositorio.findAll(); //retorna automaticamente o que estiver no banco
+//        series = dadosSeries.stream()
+//                .map(d -> new Serie(d))
+//                .collect(Collectors.toList());
         series.stream()
                 .sorted(Comparator.comparing(Serie::getGenero))
                 .forEach(System.out::println);

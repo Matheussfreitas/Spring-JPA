@@ -1,17 +1,18 @@
-package com.spring.project.ProjetoSpring.main;
+package com.spring.project.ProjetoSpring;
 
 import com.spring.project.ProjetoSpring.model.NovoMenu;
+
 import com.spring.project.ProjetoSpring.repository.SerieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = "com.spring.project.ProjetoSpring.repository")
 public class ProjetoSpringApplication implements CommandLineRunner {
 
+//Essa notação é uma injeção de dependência para que seja possivel instanciar a interface do repositorio
+//Ela precisa está sobre controle direto do spring
 	@Autowired
 	private SerieRepository repositorio;
 
