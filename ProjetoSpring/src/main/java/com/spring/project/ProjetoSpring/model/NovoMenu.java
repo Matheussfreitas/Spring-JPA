@@ -16,6 +16,7 @@ public class NovoMenu {
     private final String API_KEY = "&apikey=5ce2bbab"; //declara constantes
     private SerieRepository repositorio;
     private List<Serie> series = new ArrayList<>();
+    private Optional<Serie> serieBuscada;
 
     public NovoMenu(SerieRepository repositorio) {
         this.repositorio = repositorio;
@@ -33,6 +34,9 @@ public class NovoMenu {
                     6 - Top 5 séries
                     7 - Buscar série por categoria
                     8 - Filtrar séries
+                    9 - Buscar episódio por trecho
+                    10 - Top episódios por série
+                    11 - Buscar episódios a partir de uma data
                     
                     0 - Sair
                     """;
@@ -65,6 +69,15 @@ public class NovoMenu {
                     break;
                 case 8:
                     filtraSeriePorTemporadaEAvaliacao();
+                    break;
+                case 9:
+                    buscarEpisodioPorTrecho();
+                    break;
+                case 10:
+                    top5EpisodiosPorSerie();
+                    break;
+                case 11:
+                    buscarEpisodioPorData();
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -137,7 +150,7 @@ public class NovoMenu {
     private void buscarSeriePorTitulo() {
         System.out.println("Escolha um série pelo nome: ");
         var nomeSerie = scanner.nextLine();
-        Optional<Serie> serieBuscada = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
+        serieBuscada = repositorio.findByTituloContainingIgnoreCase(nomeSerie);
 
         if (serieBuscada.isPresent()) {
             System.out.println("Dados da série: " + serieBuscada.get());
@@ -188,5 +201,35 @@ public class NovoMenu {
         var avaliacoes = scanner.nextDouble();
         List<Serie> filtroSerie = repositorio.seriePorTemporadaEAvaliacao(temporadas, avaliacoes);
         filtroSerie.forEach(s -> System.out.println(s.getTitulo() + ", avaliação: " + s.getAvaliacoes()));
+    }
+
+    private void buscarEpisodioPorTrecho() {
+        System.out.println("Informe o nome do episódio para busca: ");
+        var trechoEpisodio = scanner.nextLine();
+        List<Episodio> episodiosEncontrados = repositorio.episodiosPorTrecho(trechoEpisodio);
+        episodiosEncontrados.forEach(e -> System.out.printf("Série: %s Temporada %s - Episódio %s - %s\n",
+                e.getSerie().getTitulo(), e.getTemporada(), e.getNumeroEpisodio(), e.getTitulo()));
+    }
+
+    private void top5EpisodiosPorSerie() {
+        buscarSeriePorTitulo();
+        if (serieBuscada.isPresent()) {
+            Serie serie = serieBuscada.get();
+            List<Episodio> topEpisodios = repositorio.topEpisodiosPorSerie(serie);
+            topEpisodios.forEach(e -> System.out.printf("Série: %s Temporada: %s - Episódio: %s - %s - Avaliação: %s\n",
+                    e.getSerie().getTitulo(), e.getTemporada(), e.getNumeroEpisodio(), e.getTitulo(), e.getAvaliacao()));
+        }
+    }
+
+    private void buscarEpisodioPorData() {
+        buscarSeriePorTitulo();
+        if (serieBuscada.isPresent()) {
+            Serie serie = serieBuscada.get();
+            System.out.println("Digite a data limite de lançamento: ");
+            var anoLancamento = scanner.nextInt();
+            scanner.nextLine();
+            List<Episodio> episodiosPorData = repositorio.episodiosPorSerieEAno(serie, anoLancamento);
+            episodiosPorData.forEach(System.out::println);
+        }
     }
 }
