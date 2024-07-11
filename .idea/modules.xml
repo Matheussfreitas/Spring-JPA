@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ProjetoSpring.iml" filepath="$PROJECT_DIR$/.idea/ProjetoSpring.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ProjetoSpring/ProjetoSpring.iml" filepath="$PROJECT_DIR$/ProjetoSpring/ProjetoSpring.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Spring-JPA.iml" filepath="$PROJECT_DIR$/.idea/Spring-JPA.iml" />
     </modules>
   </component>
 </project>
